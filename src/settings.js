@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'TM-Store',
+  title: 'Portal BKN',
 
   /**
    * @type {boolean} true | false

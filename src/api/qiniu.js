@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/utils/http-client'
 
 export function getToken() {
   return request({

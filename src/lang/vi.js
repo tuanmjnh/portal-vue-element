@@ -69,7 +69,8 @@ export default {
     profile: 'Profile',
     template: 'Template',
     template_list: 'List',
-    template_add: 'Add'
+    template_add: 'Add',
+    qrcode: 'QR-Code'
   },
   global: {
     add: 'Thêm mới',

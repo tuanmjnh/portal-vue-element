@@ -49,7 +49,7 @@ module.exports = {
     }],
     'comma-style': [2, 'last'],
     'constructor-super': 2,
-    'curly': [2, 'multi-line'],
+    'curly': [0, 'multi-line'],
     'dot-location': [2, 'property'],
     'eol-last': 2,
     'eqeqeq': ["error", "always", {"null": "ignore"}],
@@ -117,7 +117,7 @@ module.exports = {
     }],
     'no-native-reassign': 2,
     'no-negated-in-lhs': 2,
-    'no-new-object': 2,
+    'no-new-object': 0,
     'no-new-require': 2,
     'no-new-symbol': 2,
     'no-new-wrappers': 2,
@@ -126,8 +126,8 @@ module.exports = {
     'no-octal-escape': 2,
     'no-path-concat': 2,
     'no-proto': 2,
-    'no-redeclare': 2,
-    'no-regex-spaces': 2,
+    'no-redeclare': 0,
+    'no-regex-spaces': 0,
     'no-return-assign': [2, 'except-parens'],
     'no-self-assign': 2,
     'no-self-compare': 2,
@@ -158,7 +158,7 @@ module.exports = {
     'no-useless-escape': 0,
     'no-whitespace-before-property': 2,
     'no-with': 2,
-    'one-var': [2, {
+    'one-var': [0, {
       'initialized': 'never'
     }],
     'operator-linebreak': [2, 'after', {

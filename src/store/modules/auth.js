@@ -1,8 +1,9 @@
-import { auth, firestore } from '@/api/firebase/index'
+// import { auth, firestore } from '@/api/firebase/index'
+import vnptbkn from '@/utils/http-client'
 import { getToken, setToken, removeToken, getUserSetting, setUserSetting, removeUserSetting } from '@/utils/auth'
 import message from '@/utils/message'
 import router, { resetRouter } from '@/router'
-const collection = firestore.collection('users')
+const collection = 'auth'
 const state = {
   uid: '',
   profile: {},
@@ -29,14 +30,13 @@ const mutations = {
     setToken(token)
   },
   SET_USER: (state, user) => {
-    state.profile = user.profile
-    state.roles = user.roles
-    if (user.setting.cookie) {
-      state.setting = { ...state.setting, ...user.setting }
-    } else {
+    state.profile = user
+    state.roles = ['admin']// user.roles
+    if (state.setting.cookie) {
       state.setting = { ...state.setting, ...getUserSetting() }
+    } else {
+      state.setting = { ...state.setting, ...user.setting }
     }
-    // console.log(getUserSetting())
   },
   CHANGE_SETTING(state, item) {
     state.setting[item.key] = item.value
@@ -47,15 +47,10 @@ const actions = {
   login({ commit, rootState }, params) {
     return new Promise((resolve, reject) => {
       if (params && params.loading) rootState.$getLoading = true
-      auth.signInWithEmailAndPassword(params.username, params.password)
+      vnptbkn.post(collection, params)
         .then(doc => {
-          commit('SET_UID', doc.user.uid)
-          doc.user.getIdToken().then((token) => {
-            commit('SET_TOKEN', token)
-          })
-          // commit('SET_TOKEN', doc.user.refreshToken)
-          // dispatch('getUser', { uid: doc.user.uid })
-          console.log(doc.user.uid)
+          commit('SET_UID', doc.uid)
+          commit('SET_TOKEN', doc.token)
           resolve(doc)
         })
         .catch((err) => {
@@ -74,12 +69,11 @@ const actions = {
   getUser({ commit, rootState }, params) {
     return new Promise((resolve, reject) => {
       if (params && params.loading) rootState.$getLoading = true
-      collection.doc(params.uid).get()
+      vnptbkn.get(collection, { uid: params.uid })
         .then(doc => {
-          if (doc.exists) {
-            commit('SET_USER', doc.data())
-            // console.log(doc.data())
-            resolve(doc.data())
+          if (doc) {
+            commit('SET_USER', doc)
+            resolve(doc)
           }
         })
         .catch((err) => {
@@ -99,24 +93,14 @@ const actions = {
   logout({ commit, rootState }, params) {
     return new Promise((resolve, reject) => {
       if (params && params.loading) rootState.$getLoading = true
-      auth.signOut()
-        .then(() => {
-          commit('SET_TOKEN', '')
-          removeToken()
-          resetRouter()
-          resolve(true)
-        })
-        .catch((err) => {
-          console.log(err)
-          // if (err.code === 'auth/invalid-email') err.message = 'login.auth_invalid_email'
-          // else if (err.code === 'auth/user-not-found') err.message = 'login.auth_user_not_found'
-          // else if (err.code === 'auth/wrong-password') err.message = 'login.auth_wrong_password'
-          // else if (err.code === 'auth/too-many-requests') err.message = 'login.auth_too_many_requests'
-          // commit('MESSAGE_ERROR', err, { root: true })
-          message.error(err)
-          reject(err)
-        })
-        .finally(() => { if (params && params.loading) rootState.$getLoading = false })
+      commit('SET_TOKEN', '')
+      commit('SET_UID', '')
+      removeToken()
+      resetRouter()
+      resolve(true)
+      setTimeout(() => {
+        if (params && params.loading) rootState.$getLoading = false
+      }, 200)
     })
   },
   changeSetting({ commit, state, rootState }, params) {

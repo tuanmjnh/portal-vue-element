@@ -110,7 +110,7 @@
 <script>
 /* eslint-disable */
 'use strict'
-import request from '@/utils/request'
+import request from '@/utils/http-client'
 import language from './utils/language.js'
 import mimes from './utils/mimes.js'
 import data2blob from './utils/data2blob.js'

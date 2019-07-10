@@ -1,12 +1,14 @@
 'use strict'
 const path = require('path')
-const defaultSettings = require('./src/settings.js')
+const _package = require('./package.json')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
+process.env.VUE_CLI_APP_VERSION = _package.version
+process.env.VUE_CLI_APP_TITLE = _package.name
 
-const name = defaultSettings.title || 'TM-Store' // page title
+const name = process.env.VUE_CLI_APP_TITLE || 'Portal BKN' // page title
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
 // For example, Mac: sudo npm run
@@ -21,31 +23,31 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: '/',
-  outputDir: 'dist',
-  assetsDir: 'static',
+  publicPath: process.env.VUE_APP_PUBLIC_PATH,
+  outputDir: process.env.VUE_APP_OUTPUT_DIR,
+  assetsDir: process.env.VUE_APP_ASSETS_DIR,
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
-  devServer: {
-    port: port,
-    open: true,
-    overlay: {
-      warnings: false,
-      errors: true
-    },
-    proxy: {
-      // change xxx-api/login => mock/login
-      // detail: https://cli.vuejs.org/config/#devserver-proxy
-      [process.env.VUE_APP_BASE_API]: {
-        target: `http://127.0.0.1:${port}/mock`,
-        changeOrigin: true,
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
-        }
-      }
-    },
-    after: require('./mock/mock-server.js')
-  },
+  // devServer: {
+  //   port: port,
+  //   open: true,
+  //   overlay: {
+  //     warnings: false,
+  //     errors: true
+  //   },
+  //   proxy: {
+  //     // change xxx-api/login => mock/login
+  //     // detail: https://cli.vuejs.org/config/#devserver-proxy
+  //     [process.env.VUE_APP_BASE_API]: {
+  //       target: `http://127.0.0.1:${port}/mock`,
+  //       changeOrigin: true,
+  //       pathRewrite: {
+  //         ['^' + process.env.VUE_APP_BASE_API]: ''
+  //       }
+  //     }
+  //   },
+  //   after: require('./mock/mock-server.js')
+  // },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.

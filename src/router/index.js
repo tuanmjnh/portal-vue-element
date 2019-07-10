@@ -125,6 +125,19 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/qrcode',
+    component: Layout,
+    redirect: '/qrcode/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/qrcode/index'),
+        name: 'QRCode',
+        meta: { title: 'qrcode', icon: 'qr-code', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/template',
     component: Layout,
     redirect: 'noRedirect',
@@ -215,6 +228,7 @@ export const asyncRoutes = [
 // console.log(JSON.stringify(rs))
 
 const createRouter = () => new Router({
+  base: process.env.VUE_APP_PUBLIC_PATH,
   mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes

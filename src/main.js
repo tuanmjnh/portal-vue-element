@@ -8,12 +8,12 @@ import Element from 'element-ui'
 import './styles/element-variables.scss'
 
 import '@/styles/index.scss' // global css
-
+import moment from 'moment' // moment js
 import App from './App'
 import store from './store'
 import router from './router'
 // firebase
-import { auth } from '@/api/firebase/index'
+// import { auth } from '@/api/firebase/index'
 // internationalization
 import i18n from './lang'
 import './icons' // icon
@@ -33,6 +33,8 @@ import './permission'
 //   mockXHR()
 // }
 
+Vue.prototype.$moment = moment
+
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
   i18n: (key, value) => i18n.t(key, value)
@@ -45,26 +47,10 @@ Object.keys(filters).forEach(key => {
 
 Vue.config.productionTip = false
 
-let app
-auth.onAuthStateChanged(async (user) => {
-  if (!app) {
-    if (user) {
-      await store.dispatch('auth/setUserID', { uid: user.uid })
-      await store.dispatch('auth/getUser', { uid: user.uid })
-      // const tokenid = await user.getIdToken()
-      // console.log(user)
-      // console.log(tokenid)
-      // console.log(tokenid)
-      // console.log(token)
-      // console.log(user.uid)
-      // console.log(user.currentUser)
-    }
-    app = new Vue({
-      el: '#app',
-      router,
-      store,
-      i18n,
-      render: h => h(App)
-    })
-  }
+new Vue({
+  el: '#app',
+  router,
+  store,
+  i18n,
+  render: h => h(App)
 })

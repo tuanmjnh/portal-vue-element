@@ -1,5 +1,5 @@
-import { firestore } from '@/api/firebase/index'
-const collection = firestore.collection('template')
+import http from '@/utils/http-client'
+const collection = 'template'
 
 const state = {
   items: [],
@@ -20,7 +20,7 @@ const actions = {
   select({ commit, state, rootGetters, rootState }, params) {
     return new Promise((resolve, reject) => {
       if (params && params.loading) rootState.$getLoading = true
-      collection.orderBy('created_at', 'asc').get()
+      http.get('created_at', 'asc').get()
         .then(docs => {
           const items = []
           docs.forEach(function(doc) {
@@ -45,7 +45,7 @@ const actions = {
   selectSnapshot({ commit, state, rootGetters, rootState }, params) {
     return new Promise((resolve, reject) => {
       if (params && params.loading) rootState.$getLoading = true
-      collection.orderBy('created_at', 'asc')
+      http.get('created_at', 'asc')
         .onSnapshot((snapshot) => {
           const items = []
           snapshot.forEach((doc) => {
@@ -66,7 +66,7 @@ const actions = {
   insert({ commit, state, rootGetters, rootState }, params) {
     return new Promise((resolve, reject) => {
       if (params && params.loading) rootState.$commitLoading = true
-      collection.add(params.item)
+      http.post(params.item)
         .then(doc => {
           commit('MESSAGE_SUCCESS', { message: 'success.insert' }, { root: true })
           resolve(doc)
@@ -85,7 +85,7 @@ const actions = {
       if (params && params.loading) rootState.$commitLoading = true
       const data = { ...params.item }
       delete data.id
-      collection.doc(params.item.id).update(data)
+      http.put(data)
         .then(doc => {
           commit('MESSAGE_SUCCESS', { message: 'success.update' }, { root: true })
           resolve(doc)
@@ -99,7 +99,7 @@ const actions = {
   trash({ commit, state, rootGetters, rootState }, params) {
     return new Promise((resolve, reject) => {
       if (params && params.loading) rootState.$commitLoading = true
-      collection.doc(params.item.id).update(params.item)
+      http.patch(params.item)
         .then(doc => {
           commit('MESSAGE_SUCCESS', { message: 'success.trash' }, { root: true })
           resolve(doc)
@@ -116,7 +116,7 @@ const actions = {
   delete({ commit, state, rootGetters, rootState }, params) {
     new Promise((resolve, reject) => {
       if (params && params.loading) rootState.$commitLoading = true
-      collection.doc(params.item.id).delete()
+      http.delete()
         .then(doc => {
           commit('MESSAGE_SUCCESS', { message: 'success.delete' }, { root: true })
           resolve(doc)
