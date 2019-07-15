@@ -70,7 +70,8 @@ export default {
     template: 'Template',
     template_list: 'List',
     template_add: 'Add',
-    qrcode: 'QR-Code'
+    qrcode: 'QR-Code',
+    qrcode_old: 'QR-Code Old'
   },
   global: {
     add: 'Add new',

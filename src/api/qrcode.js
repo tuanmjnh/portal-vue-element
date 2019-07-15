@@ -15,3 +15,10 @@ export function getHDDT(params) {
   // })
   // })
 }
+
+export function getKyHoaDon(params) {
+  return http.get(collection, params)
+}
+export function getHDDTOld(params) {
+  return http.post(`${collection}/old`, params)
+}

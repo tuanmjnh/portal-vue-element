@@ -127,13 +127,20 @@ export const asyncRoutes = [
   {
     path: '/qrcode',
     component: Layout,
-    redirect: '/qrcode/index',
+    // redirect: '/qrcode/index',
+    meta: { title: 'qrcode', icon: 'qr-code', noCache: true },
     children: [
       {
         path: 'index',
         component: () => import('@/views/qrcode/index'),
         name: 'QRCode',
         meta: { title: 'qrcode', icon: 'qr-code', noCache: true }
+      },
+      {
+        path: 'old',
+        component: () => import('@/views/qrcode/old'),
+        name: 'QRCodeOld',
+        meta: { title: 'qrcode_old', icon: 'qr-code', noCache: true }
       }
     ]
   },
