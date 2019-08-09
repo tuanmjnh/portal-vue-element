@@ -71,26 +71,32 @@ export default {
   methods: {
     onSubmit() {
       this.loading = true
-      this.initData()
+      const kyhoadon = this.params.kyhoadon.split('-')
+      this.exportData.xmlHoadon = ''
+      this.exportData.xmlKhachHang = ''
+      this.exportData.zipnameHoadon = `hoadon_${kyhoadon[0] + kyhoadon[1] + kyhoadon[2]}`
+      this.exportData.zipnameKhachHang = `khachhang_${kyhoadon[0] + kyhoadon[1] + kyhoadon[2]}`
+      // this.initData()
       api.getHDDTOld({
         time: this.params.kyhoadon,
-        kyhoadon: this.params.kyhoadon.split('-'),
+        kyhoadon: kyhoadon,
         ma_tt: this.params.ma_tt ? this.params.ma_tt.split('\n') : []
       }).then(async (rs) => {
         // var xmlString = xml.objectToXml(rs)
         // console.log(xmlString)
-        this.exportData.xmlHoadon = await this.createHoaDon({ data: rs, kyhoadon: this.params.kyhoadon })
-        this.exportData.xmlKhachHang = await this.createKhachHang({ data: rs, kyhoadon: this.params.kyhoadon })
+        this.exportData.xmlHoadon = await this.createHoaDon({ data: rs, kyhoadon: kyhoadon })
+        this.exportData.xmlKhachHang = await this.createKhachHang({ data: rs, kyhoadon: kyhoadon })
       }).finally(() => {
         this.reset()
       })
     },
-    onChangeKyhoadon(val) {
-      this.initData()
-    },
+    // onChangeKyhoadon(val) {
+    //   this.initData()
+    // },
     createHoaDon({ data, kyhoadon }) {
+      // console.log(kyhoadon)
       return new Promise((resolve, reject) => {
-        let xmlHoadon = `<Invoices><BillTime>${this.billTime}</BillTime>\r\n`
+        let xmlHoadon = `<Invoices><BillTime>${kyhoadon[0] + kyhoadon[1] + kyhoadon[2]}</BillTime>\r\n`
         for (const i of data) {
           xmlHoadon += `<Inv>`
           xmlHoadon += `<key>${i.fkey}</key>`
@@ -101,7 +107,7 @@ export default {
           xmlHoadon += `<CusPhone>${i.dienthoai_lh}</CusPhone>`
           xmlHoadon += `<CusTaxCode></CusTaxCode>`
           xmlHoadon += `<PaymentMethod>TM/CK</PaymentMethod>`
-          xmlHoadon += `<KindOfService>${this.kindOfService}</KindOfService>`
+          xmlHoadon += `<KindOfService>${kyhoadon[1] + '/' + kyhoadon[0]}</KindOfService>`
           xmlHoadon += `<Products>`
           xmlHoadon += `<Product>`
           xmlHoadon += `<ProdName><![CDATA[Cước dịch vụ viễn thông]]></ProdName>`
@@ -133,7 +139,7 @@ export default {
           xmlHoadon += `</Product>`
           xmlHoadon += `</Products>`
           xmlHoadon += `<Extra><![CDATA[${i.tuyenthu};${i.cantru};${i.tong_pt}]]></Extra>`
-          xmlHoadon += `<MaThanhToan>${i.qrcode}</MaThanhToan>`
+          xmlHoadon += `<MaThanhToan>${this.getMaThanhToanHD(kyhoadon[1] + kyhoadon[0], i.ma_tt, 2)}</MaThanhToan>`
           xmlHoadon += `<Total>${i.tien}</Total>`
           xmlHoadon += `<DiscountAmount></DiscountAmount>`
           xmlHoadon += `<VATRate>10</VATRate>`
@@ -165,7 +171,7 @@ export default {
           xml += `<ContactPerson><![CDATA[]]></ContactPerson>`
           xml += `<RepresentPerson><![CDATA[]]></RepresentPerson>`
           xml += `<CusType>1</CusType>`
-          xml += `<MaThanhToan>${i.qrcode}</MaThanhToan>`
+          xml += `<MaThanhToan>${this.getMaThanhToanHD(kyhoadon[1] + kyhoadon[0], i.ma_tt, 2)}</MaThanhToan>`
           xml += `</Customer>\r\n`
         }
         xml += '</Customers>'
@@ -173,6 +179,7 @@ export default {
       })
     },
     getMaThanhToanHD(kyhoadon, ma_tt, type) {
+      // console.log(kyhoadon, ma_tt, type)
       // Ver 1
       // string first = "0002010102112620970415010686973800115204123453037045802VN5910VIETINBANK6005HANOI6106100000";
       // Ver 2
@@ -187,12 +194,12 @@ export default {
       const QRType = '0818' + '2'
       const details = type === 2 ? 'CUOC MANG DI DONG' : 'CUOC MANG CO DINH'
       const last = time + this.fixMaThanhToan(ma_tt) + province + QRType + details
-      const tagLength = '62' + last.Length.ToString()
+      const tagLength = `62${last.length}`
       return first + tagLength + last
       // "<MaThanhToan><![CDATA[0002010102112620970415010686973800115204123453037045802VN5909VIETINBANK6005HANOI6106100000626301060720170613  024357434690703BCN08172CUOC MANG CODINH]]></MaThanhToan>"
     },
     fixMaThanhToan(ma_cq, preFixMain = '06', dfLenght = 13) {
-      ma_cq = ma_cq.Trim()
+      ma_cq = ma_cq.trim()
       const count = ma_cq.length
       let preFixMaCQ = ''
       if (count < dfLenght)
@@ -207,9 +214,9 @@ export default {
       this.loading = false
     },
     initData() {
-      const khd = this.params.kyhoadon.split('-')
-      this.billTime = khd[0] + khd[1] + khd[2]
-      this.kindOfService = khd[1] + '/' + khd[0]
+      // const khd = this.params.kyhoadon.split('-')
+      // this.billTime = khd[0] + khd[1] + khd[2]
+      // this.kindOfService = khd[1] + '/' + khd[0]
       this.exportData.xmlHoadon = ''
       this.exportData.xmlKhachHang = ''
       this.exportData.zipnameHoadon = `hoadon_${this.billTime}`
