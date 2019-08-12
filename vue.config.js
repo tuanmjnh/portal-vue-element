@@ -28,26 +28,26 @@ module.exports = {
   assetsDir: process.env.VUE_APP_ASSETS_DIR,
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
-  devServer: {
-    port: port,
-    open: true,
-    overlay: {
-      warnings: false,
-      errors: true
-    },
-    proxy: {
-      // change xxx-api/login => mock/login
-      // detail: https://cli.vuejs.org/config/#devserver-proxy
-      [process.env.VUE_APP_BASE_API]: {
-        target: `http://localhost:${port}`,
-        changeOrigin: true,
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
-        }
-      }
-    },
-    after: require('../vnpt-api-express-typescript/dist/index.js')
-  },
+  // devServer: {
+  //   port: port,
+  //   open: true,
+  //   overlay: {
+  //     warnings: false,
+  //     errors: true
+  //   },
+  //   proxy: {
+  //     // change xxx-api/login => mock/login
+  //     // detail: https://cli.vuejs.org/config/#devserver-proxy
+  //     [process.env.VUE_APP_BASE_API]: {
+  //       target: `http://localhost:${port}`,
+  //       changeOrigin: true,
+  //       pathRewrite: {
+  //         ['^' + process.env.VUE_APP_BASE_API]: ''
+  //       }
+  //     }
+  //   },
+  //   after: require('../vnpt-api-express-typescript/dist/index.js')
+  // },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
