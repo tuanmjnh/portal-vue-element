@@ -125,22 +125,28 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/qrcode',
+    path: '/hddt',
     component: Layout,
     // redirect: '/qrcode/index',
-    meta: { title: 'qrcode', icon: 'qr-code', noCache: true },
+    meta: { title: 'hddt', icon: 'qr-code', noCache: true },
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/qrcode/index'),
-        name: 'QRCode',
-        meta: { title: 'qrcode', icon: 'qr-code', noCache: true }
+        path: 'ezpay',
+        component: () => import('@/views/hddt/ezpay'),
+        name: 'ezpay',
+        meta: { title: 'hddt_ezpay', icon: 'qr-code', noCache: true }
+      },
+      {
+        path: 'huy',
+        component: () => import('@/views/hddt/huy'),
+        name: 'huy',
+        meta: { title: 'hddt_huy', icon: 'qr-code', noCache: true }
       },
       {
         path: 'old',
-        component: () => import('@/views/qrcode/old'),
+        component: () => import('@/views/hddt/old'),
         name: 'QRCodeOld',
-        meta: { title: 'qrcode_old', icon: 'qr-code', noCache: true }
+        meta: { title: 'hddt_old', icon: 'qr-code', noCache: true }
       }
     ]
   },

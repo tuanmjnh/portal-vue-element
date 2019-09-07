@@ -1,5 +1,5 @@
 import http from '@/utils/http-client'
-const collection = 'qrcode'
+const collection = 'hddt'
 
 export function getHDDT(params) {
   // return new Promise((resolve, reject) => {
@@ -21,4 +21,10 @@ export function getKyHoaDon(params) {
 }
 export function getHDDTOld(params) {
   return http.post(`${collection}/old`, params)
+}
+export function getTableHDDT(params) {
+  return http.get(`${collection}/table`, { params: params.data })
+}
+export function getHDDTDULIEU(params) {
+  return http.post(`${collection}/dulieu`, params)
 }

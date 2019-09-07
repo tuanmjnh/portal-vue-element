@@ -70,8 +70,10 @@ export default {
     template: 'Template',
     template_list: 'List',
     template_add: 'Add',
-    qrcode: 'QR-Code',
-    qrcode_old: 'QR-Code cũ'
+    hddt: 'HDDT',
+    hddt_ezpay: 'Ezpay',
+    hddt_huy: 'Hủy',
+    hddt_old: 'HDDTe Old'
   },
   global: {
     add: 'Thêm mới',
